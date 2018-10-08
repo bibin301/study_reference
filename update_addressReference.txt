@@ -1,0 +1,332 @@
+<template>
+<div>
+    <table class="form-table">
+        <tbody>
+             <tr>
+                <td><strong>Account Reference:</strong> </td>
+                <td>PSIT24JBLOGGS19800381001</td>
+            </tr>
+            <tr>
+                <td><strong>Account ID:</strong></td>
+                <td> 5555544444</td>
+            </tr>
+            <tr>
+                <td><strong>Cardholder name:</strong></td>
+                <td>Joe Bloggs</td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="address-box">
+     <table class="form-table transaction_list">
+        <tbody>
+             <tr>
+                <td colspan="2"><strong>Current Adddress</strong></td>
+               
+            </tr>
+            <tr>
+                <td><strong>Name:</strong></td>
+                <td>Joe Bloggs</td>
+            </tr>
+            <tr>
+                <td><strong>Address 1:</strong></td>
+                <td>1 Threadneedle St.</td>
+            </tr>
+             <tr>
+                <td><strong>Address 2 :</strong></td>
+                <td></td>
+            </tr>
+             <tr>
+                <td><strong>City :</strong></td>
+                <td>London</td>
+            </tr>
+            <tr>
+                <td><strong>Post Code :</strong></td>
+                <td>NW1 6XE</td>
+            </tr>
+             <tr>
+                <td><strong>Country :</strong></td>
+                <td>United Kingdom</td>
+            </tr> 
+        </tbody>
+    </table>
+    </div>
+ <div class="dialog-address">
+        <div v-if="touched === true" class="margin-left: 50px;" style="color: rgb(255, 0, 0);">{{$t('cardManagement.selection_one_entry_adjust')}}</div>
+       
+    </div>
+   <div class="">
+       <p><strong>Upload new Proof of Address (POA)</strong></p>
+       </div>
+ <b-row style="margin-left:1px">
+        <b-button class="btn btn-default btn-xs" style="border-radius: 4px ;background-color:transparent; color:#000 ;border-color:#494949" @click="closeFeeBalanceModal" >
+            <i class="fa fa-file-image-o"></i> {{ $t('cardManagement.buttons.browse') }}
+        </b-button>
+        <b-button @click="submitSelection" class="btn btn-primary btn-xs" style="margin-left: 5px; width: 100px !important;border-radius: 4px" variant="primary">
+            <i class="fa fa-files-o"></i> {{ $t('cardManagement.buttons.addfile') }}
+        </b-button>
+    </b-row>
+    
+      <div class="" style="margin-top:10px">
+       <p><strong>New POA Preview</strong></p>
+       </div>
+
+
+    <b-row style="width: 250px; margin: 20px auto 10px auto;">
+        <b-button class="btn btn-danger btn-xs" style="width: 80px !important;border-radius: 4px" @click="closeFeeBalanceModal" variant="danger">
+            <i class="fa fa-times"></i> {{ $t('cardManagement.buttons.cancel') }}
+        </b-button>
+        <b-button @click="submitSelection" class="btn btn-primary btn-xs" style="margin-left: 15px; width: 60px !important;border-radius: 4px" variant="primary">
+            <i class="fa fa-check"></i> {{ $t('cardManagement.buttons.ok') }}
+        </b-button>
+    </b-row>
+</div>
+</template>
+
+<script>
+import { mapGetters, mapActions } from "vuex";
+import _map from "lodash/map";
+import _assign from "lodash/assign";
+import _get from "lodash/get";
+import _find from "lodash/find";
+import _toNumber from "lodash/toNumber";
+
+import flags from "@/constants/flag";
+
+export default {
+  name: "update-address",
+  props: [
+    "closeModal",
+    "submitCardStatus",
+    "cardData",
+    "currencies",
+    "currencyDetails",// check
+    "updatedAddress",
+    "modalItem"
+  ],
+  data() {
+    return {
+      selectedFeeCurrency: "",
+      selectedCurrency: "",
+      selectedCurrencyCode: null,
+      selectedCurrencyOtb: "",
+      fee_balance_amount: "",
+      fee_balance_description: "",
+      touched: false,
+      touchedFeeBalanceDesc: false,
+      touchedFeeBalanceAmount: false
+    };
+  },
+  computed: {
+    ...mapGetters({
+      updatedAddress: "search/fetchUpdateAddress"
+    
+    }),
+     
+    fetchCurrencies() {
+      const currencyData = _map(this.currencyDetails, obj =>
+        _assign({
+          otb: obj.balances.cotb,
+          currencyBalance: obj.balances.currencyBalance,
+          flag: this.getValue(flags, obj, "currencyCode", "flag"),
+          currency: this.getValue(this.currencies, obj, "value", "text"),
+          currencyCode: obj.walletCurrencyCode
+        })
+      );
+      return currencyData;
+    }
+  },
+  methods: {
+    ...mapActions([]),
+    checkOtb(currency) {
+      return currency.otb === "";
+    },
+    closeFeeBalanceModal() {
+      this.closeModal();
+      this.resetData();
+    },
+    resetData() {
+      this.selectedFeeCurrency = "";
+      this.selectedCurrency = "";
+      this.fee_balance_amount = "";
+      this.fee_balance_description = "";
+      this.selectedCurrencyOtb = "";
+      this.selectedCurrencyCode = null;
+      this.touched = false;
+      this.touchedFeeBalanceAmount = false;
+      this.touchedFeeBalanceDesc = false;
+    },
+    getCurrency(currency) {
+      return `${currency.otb.toFixed(2)} ${currency.currency}`;
+    },
+    getValue(data, obj, itemValue, key) {
+      return _get(
+        _find(data, item => item[itemValue] === obj.walletCurrencyCode),
+        key
+      );
+    },
+    selectCurrency(selected) {
+      this.selectedCurrency = selected.currency;
+      this.selectedCurrencyCode = selected.currencyCode;
+      this.selectedCurrencyOtb = selected.otb.toFixed(2);
+      this.touched = false;
+    },
+    selectedCurrencyStyling(selected) {
+      return { selectedCurrency: this.selectedCurrency === selected };
+    },
+    submitSelection() {
+      if (this.selectedCurrency === "") this.touched = true;
+      if (this.fee_balance_amount === "") this.touchedFeeBalanceAmount = true;
+      if (this.fee_balance_description === "")
+        this.touchedFeeBalanceDesc = true;
+      else {
+        this.submitCardStatus(
+          {
+            trnReference: "123",
+            feeCode: "1",
+            echoData: "charge a fee",
+            feeCurrencyCode: this.selectedCurrencyCode,
+            feeAmount: _toNumber(this.fee_balance_amount).toFixed(2),
+            feeDescription: this.fee_balance_description
+          },
+          this.modalItem
+        );
+        this.resetData();
+      }
+    }
+  },
+  created() {
+    this.$store.dispatch("search/fetchUpdateAddress");
+  }
+};
+</script>
+
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style scoped>
+table.form-table tr {
+  line-height: 0.8;
+  color: #494949;
+}
+.address-box {
+  margin-top: 20px;
+}
+.form-table {
+  width: 100% !important;
+  margin-top: 10px !important;
+}
+.transaction_list {
+  border: 2px solid #a9a9a9;
+}
+.dialog-address{
+  margin-top: 15px;
+  margin-bottom: 15px;
+  border-top: 1px solid #a9a9a9;
+}
+/* .form-table {
+  border: 1px solid #a9a9a9;
+} */
+.upload-group.dummy-template {
+  display: none;
+}
+.form-table tr th {
+  border: 1px solid #d0d0d0;
+  text-align: left;
+  color: #000000;
+  background-image: linear-gradient(to bottom, #ececec 0, #dddddd 100%);
+  font-weight: normal;
+}
+
+.dialog-notifications {
+  padding-left: 150px;
+}
+
+.dialog-buttonset,
+.dialog-currency {
+  border-top: 1px solid #d0d0d0;
+  margin: 20px 5px;
+  padding-bottom: 15px;
+  padding-top: 12px;
+}
+
+.selected-currency {
+  line-height: 30px;
+  float: right;
+}
+
+.dialog-buttonset {
+  border-bottom: 1px solid #d0d0d0;
+}
+
+.selectedFeeCurrency,
+.selectedCurrency {
+  background-image: linear-gradient(
+    to bottom,
+    #494949 0,
+    #333333 100%
+  ) !important;
+}
+.form-table tr.control {
+  background-color: rgba(0, 0, 0, 0) !important;
+  height: 60px;
+  min-height: 60px;
+}
+.form-table tr:nth-child(even) {
+  background-color: #e6e6e6;
+}
+
+.fa-info-circle {
+  color: #46a694;
+  position: relative;
+}
+table {
+  max-width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+  background-color: transparent;
+}
+.form-table tr td {
+  font-size: 13px;
+  padding: 5px;
+  border: 1px solid #d0d0d0;
+  font-weight: normal;
+}
+.btn-primary {
+  border-radius: 3px;
+  background-image: linear-gradient(to bottom, #009688 0, #007a6c 100%);
+  background-repeat: repeat-x;
+  border: 1px solid #cbcbcc;
+}
+.btn-primary:focus,
+.btn-primary:visited,
+.btn-primary:active {
+  outline: 0;
+  box-shadow: none;
+  border: none;
+  background-image: linear-gradient(to bottom, #009688 0, #007a6c 100%);
+}
+.btn-primary:not(:disabled):not(.disabled):active {
+  background-image: linear-gradient(to bottom, #009688 0, #007a6c 100%);
+  outline: 0;
+  box-shadow: none;
+}
+.btn-danger,
+.btn-danger:hover,
+.btn-danger:focus {
+  outline: 0;
+  box-shadow: none;
+  border: none;
+  background-image: linear-gradient(to bottom, #d9534f 0, #d43f3a 100%);
+}
+.form-control {
+  font-size: inherit;
+}
+
+.form-control:focus {
+  border: 1px solid #49a694;
+  outline: none;
+  box-shadow: none;
+}
+.btn-xs {
+  font-size: 12px !important;
+  padding: 2px 10px !important;
+}
+</style>

@@ -1,0 +1,140 @@
+TypeScript:
+==========
+
+React integration:
+---------------------
+
+
+/// <reference path="react.d.ts" />
+
+interface Props {
+  foo: string;
+}
+
+class MyComponent extends React.Component<Props, {}> {
+  render() {
+    return <span>{this.props.foo}</span>
+  }
+}
+
+<MyComponent foo="bar" />; // ok
+<MyComponent foo={0} />; // error
+
+
+
+Basic Types:
+-----------------
+
+boolean,number ,string ,Array,Tuple,Enum ,Any ,Void, Null and Undefined, Type assertions
+
+Boolean:
+--
+let isDone: boolean = false;
+
+
+Number:
+---
+
+let decimal: number = 6;
+let hex: number = 0xf00d;
+let binary: number = 0b1010;
+let octal: number = 0o744;
+
+String:
+---
+
+let color: string = "blue";
+color = 'red';
+
+Template strings
+...............
+
+let fullName: string = `Bob Bobbington`;
+let age: number = 37;
+let sentence: string = `Hello, my name is ${ fullName }.
+
+Array:
+------
+
+let list: number[] = [1, 2, 3];
+
+Array<elemType>:
+
+let list: Array<number> = [1, 2, 3];
+
+Tuble:
+
+Tuple types allow you to express an array where the type of a fixed number of elements is known, but need not be the same.
+For example, you may want to represent a value as a pair of a string and a number:
+
+
+example:
+// Declare a tuple type
+let x: [string, number];
+// Initialize it
+x = ["hello", 10]; // OK
+// Initialize it incorrectly
+x = [10, "hello"]; // Error
+
+Enum:
+-------
+enum Color {Red = 1, Green = 2, Blue = 4}
+let c: Color = Color.Green;
+
+
+Void:
+--------
+
+function warnUser(): void {
+    alert("This is my warning message");
+}
+
+let unusable: void = undefined;
+
+
+
+Type assertions:
+-------------------
+
+
+Array spread:
+------------------------
+It allows you to spread an array into another array, or an object into another object
+
+let [first, ...rest] = [1, 2, 3, 4];
+console.log(first); // outputs 1
+console.log(rest); // outputs [ 2, 3, 4 ]
+
+
+Array destructuring:
+---------------------------
+
+let input = [1, 2];
+let [first, second] = input;
+console.log(first); // outputs 1
+console.log(second); // outputs 2
+
+function f([first, second]: [number, number]) {
+    console.log(first);
+    console.log(second);
+}
+f([1, 2]);
+
+
+
+Interfaces:
+
+=============
+
+
+interface LabelledValue {
+    label: string;
+}
+
+function printLabel(labelledObj: LabelledValue) {
+    console.log(labelledObj.label);
+}
+
+let myObj = {size: 10, label: "Size 10 Object"};
+printLabel(myObj);
+

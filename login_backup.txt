@@ -1,0 +1,235 @@
+import React from 'react';
+import validator from 'validator';
+import { NavLink } from 'react-router-dom';
+import axios from 'axios';
+import { API_BASE_URL } from '../../constant/constant.js';
+import Notifications, { notify } from 'react-notify-toast';
+import logo from '../../../public/images/oling-logo.png';
+
+import '../../../public/assets/css/reset.css';
+import '../../../public/assets/css/font.css';
+import '../../../public/assets/css/style.css';
+import '../../../public/assets/css/font-awesome.css';
+import '../../../public/assets/css/responsive.css';
+
+
+class Login extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            username: '',
+            password: '',
+            errorResponse: '',
+            errors: {},
+            usernameError: '',
+            loading: false
+        };
+     
+        if (sessionStorage.getItem('userData') != null) {
+            const userSession = JSON.parse(sessionStorage.getItem('userData'));
+            if (userSession.userType == 0) {
+                props.history.push('/admindashboard');
+            }
+            else if (userSession.userType == 1) {
+                props.history.push('/userdashboard');
+            }
+
+        }
+        this.handleOnchangeUsername = this.handleOnchangeUsername.bind(this);
+        this.handleLoginService = this.handleLoginService.bind(this);
+        this.handleOnchangePassword = this.handleOnchangePassword.bind(this);
+
+    }
+
+    handleOnchangeUsername(event) {
+        event.preventDefault();
+        this.setState({ [event.target.name]: event.target.value });
+
+        if (event.target.name === "username") {
+            if (!validator.isEmail(event.target.value)) {
+                errors.username = 'Please enter valid email id';
+            }
+        }
+    }
+    handleOnchangePassword(event) {
+        event.preventDefault();
+        this.setState({ [event.target.name]: event.target.value });
+    }
+
+    handleLoginService(event) {
+        event.preventDefault();
+        const props = this.props;
+        let set = this;
+        set.setState({ loading: true });
+        var apiBaseUrl = API_BASE_URL + "login";
+        let userLogin = {
+            "emailId": this.state.username,
+            "password": this.state.password
+        };
+        axios.post(apiBaseUrl, userLogin)
+            .then(response => {
+                if (response.status == 200) {
+                    set.setState({ loading: false });
+                    sessionStorage.setItem('userData', JSON.stringify(response.data.loginInfo));
+                    if (response.data.loginInfo.roleId == 0) {
+                        props.history.push('/admindashboard');
+                    }
+                    else if (response.data.loginInfo.roleId == 1) {
+                        props.history.push('/Userdashboard');
+                    }
+                }
+                else {
+                    set.setState({ loading: false });
+                    set.setState({ errorResponse: response.data.message });
+                    setTimeout(() => set.setState({ errorResponse: '' }), 5000);
+                }
+            })
+            .catch(function (error) {
+                set.setState({ loading: false });
+                set.setState({ errorResponse: error.message });
+                setTimeout(() => set.setState({ errorResponse: '' }), 5000);
+            });
+
+    }
+    // <img src={logo} alt="logo" />
+
+    render() {
+        return (
+            <div className="form-page">
+                   <Notifications />
+              {this.state.loading &&
+                    <div className="loader-bgclr">
+                        <div id="cssload-loader">
+                            <div className="cssload-dot"></div>
+                            <div className="cssload-dot"></div>
+                            <div className="cssload-dot"></div>
+                            <div className="cssload-dot"></div>
+                            <div className="cssload-dot"></div>
+                            <div className="cssload-dot"></div>
+                            <div className="cssload-dot"></div>
+                            <div className="cssload-dot"></div>
+                        </div>
+                    </div>
+                }
+            <div className=" login-form-new">
+                <div className="login-body" style={{width:'100%'}}>
+                    <form>
+                        <div className="login-logo">
+                        <img src={logo} alt="logo" />
+                        </div>
+                        <div className="form-heading txt-center" style={{background:'#fff'}} >
+    
+                            <div className="form-title">Login</div>
+                            <div className="login-form">
+                                <div className="form-group">
+                                    <input placeholder="UserName" id="username" name="username"  required="" type="email" value={this.state.username} onChange={this.handleOnchangeUsername}/>
+                                    {this.state.errors.username &&
+                                        <span className="span-error">{this.state.errors.username}</span>
+                                    }
+                                </div>
+                                <div className="form-group">
+                                    <input placeholder="Password" id="password"name="password" required="" type="password"  value={this.state.password} onChange={this.handleOnchangeUsername}/>
+                                    <span className="error-messge">Invalid Password</span>
+                                </div>
+                                <div className="form-group">
+                                    <div className="remeber-me">
+                                        <label>
+                                            <input type="checkbox"/> Remember me
+                                        </label>
+                                    </div>
+                                    <div className="forgot-pwd">
+                                        <a href="javascript:void(0)">Forgot Password?</a>
+                                    </div>
+                                    <div className="clear"></div>
+                                </div>
+                                <div className="form-group">
+                                    <button type="button" className="btn-login" disabled={this.state.username===''||this.state.password===''} onClick={this.handleLoginService}>Login</button>
+                                    <div className="clear"></div>
+                                </div>
+
+                                {this.state.errorResponse &&
+                                    <div style={{ textAlign: 'center' }}>
+                                        <span className="error-message1">{this.state.errorResponse}</span>
+                                    </div>
+
+                                }
+                                <div className="form-group">
+                                    <p className="account-reg">Dont’t have an Account?
+                                    <NavLink to={'/register'} className="to_register"> Register Now</NavLink>
+                                    </p>
+                                    <div className="clear"></div>
+                                </div>
+                                <div className="clear"></div>
+                            </div>
+                            <div className="clear"></div>
+                        </div>
+                    </form>
+                </div>
+                <div className="clear"></div>
+            </div>
+            <div className="clear"></div>
+        </div>
+    
+
+
+
+            // <div className="bg" style={{position:'fixed'}}>
+            //  <Notifications />
+            //  {this.state.loading &&
+            //         <div className="loader-bgclr">
+            //             <div id="cssload-loader">
+            //                 <div className="cssload-dot"></div>
+            //                 <div className="cssload-dot"></div>
+            //                 <div className="cssload-dot"></div>
+            //                 <div className="cssload-dot"></div>
+            //                 <div className="cssload-dot"></div>
+            //                 <div className="cssload-dot"></div>
+            //                 <div className="cssload-dot"></div>
+            //                 <div className="cssload-dot"></div>
+            //             </div>
+            //         </div>
+            //     }
+
+            //     <div id="container_demo">
+            //         <a className="hiddenanchor" id="toregister"></a>
+            //         <a className="hiddenanchor" id="tologin"></a>
+            //         <div id="wrapper">
+            //             <div id="login" className="animate form">
+            //                 <form >
+            //                     <h1>Log in</h1>
+            //                     <p>
+            //                         <label for="username" className="uname" data-icon="u"> Your Username </label>
+            //                         <input id="username" className="stripspaces" name="username" required="required" type="text" placeholder="User Name" onChange={this.handleOnchangeUsername} />                                    
+            //                     </p>
+            //                     <p>
+            //                         <label for="password" className="youpasswd" data-icon="p"> Your password </label>
+            //                         <input id="password" className="stripspaces" name="password" required="required" type="password" placeholder="eg. X8df!90EO"  onChange={this.handleOnchangePassword} />
+            //                     </p>
+            //                     <p className="keeplogin">
+            //                         <input type="checkbox" name="loginkeeping" id="loginkeeping" value="loginkeeping" />
+            //                         <label for="loginkeeping">Keep me logged in</label>
+            //                     </p>
+            //                     <p className="login button">
+            //                         <input type="submit" className="lg-btn" name="btnlogin" value="Login" disabled={this.state.username===''||this.state.password===''} onClick={this.handleLoginService} />
+            //                         <NavLink to={'/forgotpassword'} style={{float: 'left'}}>Forgot Password</NavLink>                                  
+            //                     </p>
+            //                     {this.state.errorResponse &&
+            //                         <div style={{textAlign:  'center'}}>
+            //                         <span className="span-error">{this.state.errorResponse}</span>
+            //                         </div>
+
+            //                         }
+            //                     <p className="change_link">
+            //                         Not a member yet ?
+            //                     <NavLink to={'/register'} className="to_register">Join us</NavLink>
+            //                     </p>
+            //                 </form>
+            //             </div>
+            //         </div>
+            //     </div>
+            // </div>
+        )
+    }
+}
+
+export default Login;

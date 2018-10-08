@@ -1,0 +1,10 @@
+The device driver for the Trusted Platform Module (TPM) encountered a non-recoverable error in the TPM hardware, which prevents TPM services (such as data encryption) from being used. For further help, please contact the computer manufacturer.
+
+
+
+
+
+The system has rebooted without cleanly shutting down first. This error could be caused if the system stopped
+responding, crashed, or lost power unexpectedly.
+
+The computer has rebooted from a bugcheck.  The bugcheck was: 0x0000001a (0x0000000000041792, 0xffffa03ffeeca098, 0x0000000000800000, 0x0000000000000000). A dump was saved in: C:\Windows\MEMORY.DMP. Report Id: 93dda7b2-6ce5-44a2-9776-49a022bcb688.

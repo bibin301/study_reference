@@ -1,0 +1,68 @@
+git clone http://192.158.0.24:8888/gitlab/ssubash/iDetectReactUI.git
+
+git clone origin/master
+
+git checkout TSX-CONVERSION-S30
+
+git fetch
+
+git checkout Sprint-43-branch
+
+
+
+commit:
+=======
+git status
+
+git pull origin c-branch-new
+
+
+git add <filename>
+
+git commit -m "commit"
+
+
+git push origin c
+
+============
+height: 113px;
+    /* overflow: auto; */
+    overflow-y: auto;
+	
+	
+	
+============
+
+
+For the moment, the only required thing to do with MetaMask is to figure out if the user has it and to ask to our API to see the items owned by that address.
+
+
+Here u have a snippet
+
+
+var Web3 = require('web3')
+
+
+const web3 = new Web3(Web3.givenProvider || "https://mainnet.infura.io");
+web3.eth.getAccounts().then(function (err) {console.log(err); pub = err[0];});
+
+
+or like web3.eth.accounts[0]
+
+
+
+
+the web3js package is really changing weekly so it's possible that something changed.
+
+
+Once u have the current address u can trigger the API with the search:
+
+
+GET  https://cryptodesksapi.azurewebsites.net//api/search/ByAddress?address=[ADDRESS]&start=0&toget=50 
+
+
+As a test address u can use: 
+0x15d82290c2d78764fca6e158b5af5e2e9ddb46a8 
+
+
+I'll send u another email with the API definition

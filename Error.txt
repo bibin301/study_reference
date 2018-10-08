@@ -1,0 +1,14 @@
+The application-specific permission settings do not grant Local Activation permission for the COM Server application with CLSID 
+{D63B10C5-BB46-4990-A94F-E40B9D520160}
+ and APPID 
+{9CA88EE3-ACB7-47C8-AFC4-AB702511C276}
+ to the user NT AUTHORITY\SYSTEM SID (S-1-5-18) from address LocalHost (Using LRPC) running in the application container Unavailable SID (Unavailable). This security permision can be modified using the Component Services administrative tool.
+
+
+
+The processing of Group Policy failed because of lack of network connectivity to a domain controller. This may be a transient condition. A success message would be generated once the machine gets connected to the domain controller and Group Policy has successfully processed. If you do not see a success message for several hours, then contact your administrator.
+
+
+
+Failed extract of third-party root list from auto update cab at: <http://ctldl.windowsupdate.com/msdownload/update/v3/static/trustedr/en/authrootstl.cab> with error: The data is invalid.
+.

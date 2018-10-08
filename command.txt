@@ -1,0 +1,44 @@
+general:
+===
+id:bibinraj@colanonline.com
+pw:iLpg#fL0
+EID:CIPL0592
+
+https://mycipl.in/index.php
+
+HDFC Account Number:50100088131400
+
+HDFC Account Name(As per in our Account): Bibin raj
+
+IFSC Code: HDFC0001048
+
+Branch: Bommanahally
+
+https://github.com/mraible/angular-seed
+https://github.com/zamarrowski/pokemon-poc - web pack
+
+http://webmail.colanonline.com/appsuite/# - web mail
+
+https://stackoverflow.com/questions/20841822/how-to-restrict-keyboard-key-events-in-web-application
+
+
+npm install
+npm run postinstall
+npm start
+
+npm run build
+
+
+====read ip address by using javascript =====
+
+http://www.codescratcher.com/javascript/disable-mouse-right-click-using-javascript/ - Disable Mouse Right Click using JavaScript
+
+https://jsfiddle.net/ourcodeworld/cks0v68q/?utm_source=website&utm_medium=embed&utm_campaign=cks0v68q
+https://github.com/fabiobiondi/angular-fullscreen
+
+https://codepen.io/fabiobiondi/pen/eqpdI
+====
+
+
+8903893314
+

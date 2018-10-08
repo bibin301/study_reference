@@ -1,0 +1,52 @@
+Udemy Courese -react with node:
+==============================
+https://kangax.github.io/compat-table/es6/ - to check js comparision
+https://github.com/StephenGrider/FullstackReactCode
+
+Course Diagrams:
+
+https://github.com/StephenGrider/FullstackReactCode/tree/master/diagrams
+heroku.com
+https://devcenter.heroku.com/articles/heroku-cli#download-and-install
+create react app
+
+
+---
+
+
+=============Babel====
+
+        query: {
+          presets: ['es2015', 'react', 'stage-0'],
+          plugins: ['transform-decorators-legacy']
+        }
+es2015: Adds support for ES2015 (or ES6) JavaScript
+react: Adds support for JSX
+===========
+
+Difference bw node and express
+
+Node : javascript runtime used to exeute code outside of the browser
+
+Express: Library that runs in the node runtime has helpers to make dealing with HTTP traffic easier
+
+
+app - Express app to register this route handler with
+get - watch for incoming requests with this method 
+'/' - watch for requests trying to access '/'
+req - object representing the incoming request
+res - object representing the outgoing response 
+res.send  -({hi:'there'}) -immediately send some json back to who ever made this request
+
+=====
+node setup:
+----------
+npm install --save express
+cat package.json
+------
+npm install -g create-react-app
+create-react-app client
+
+
+
+

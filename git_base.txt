@@ -1,0 +1,100 @@
+check version ->git --version
+Set config files:
+git config --global user.name "username"
+git config --global user.email "user@gmail.com"
+
+
+git config --list -to check configuration values
+
+
+need help
+
+git help <verb>
+git help config
+
+git config --help
+
+
+
+git init
+
+
+
+Before first commit
+
+git status
+
+AddGitIgnore files
+
+
+Working directory , staging area , .git directory(Repository)
+
+
+untracked and modified files will be in working directory -
+
+commit area is staging
+
+
+Add files to staging Area
+
+git add -A
+
+Remove files from stagging area
+
+git reset <file name>
+
+git reset - every thing
+
+
+git commit -m "initial commit"
+
+
+
+git log -> author made commit  and message
+
+
+
+
+cloning a remomte repo
+
+git clone <path>
+
+
+viewing information about the remote repositary
+
+git remote -v
+
+git branch -a
+
+
+pushing changes
+
+git diff - show us the changes made code
+git status
+git add -A
+git status
+git commit -m "comments"
+
+push to repositary
+
+git pull origin master
+git push origin master
+
+
+create a branch for Desired feature
+
+git branch mybranchname
+git checkout mybranchname
+
+to delete branch
+git branch -d <branch name>
+
+
+
+
+
+
+
+
+
+

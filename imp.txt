@@ -1,0 +1,87 @@
+http://localhost:8080/cindiangoldcoin/api/user/emailverification&source=gmail&ust=1520320130778000&usg=AFQjCNENqeCYNEM9T7IvI2HzIM71gPlBRg
+
+http://localhost:3005/#/confirmRegestration?mobileNo=source&password=usg&emailId=obj
+
+
+=========
+
+TO START JSON SERVER : json-server --watch info.json
+TO_POC : POC
+=============
+bit bucket
+
+senthilnathan.subash@colanonline.com
+Sen#2985
+==============
+RECEIVE_UPDATED_ADDRESS
+8957823489
+bibin@valid.com
+Valid@123
+http://localhost:3005/#/confirmRegestration?mobileNo=8957823489&password=Valid@123&emailId=bibin@valid.com
+user1@gmail.com
+vishnu
+vishnuraj1252@gmail.com
+Vishnu@123
+admin-login
+priyanga.r@colanonline.com
+User0432
+198.192.168.1.26
+
+Cannot read property 'people' of undefined
+
+errors-
+ else {
+            this.setState({ errors });
+            setTimeout(() => this.setState({ errors: '' }), 5000);
+        }
+
+
+=============
+cardData
+
+viewAccountDetails.vue -Reference
+
+accountSummary
+account-summary
+transaction-details
+csiRecord
+fetchRestriction
+
+
+-----------
+
+
+UN: CIPL0592
+P:NP7BYT
+https://lmt.mycipl.in/
+fb login link in angularjs
+https://www.npmjs.com/package/angularjs-facebook
+https://www.npmjs.com/package/react-modal - react js model
+https://regex101.com/r/RRswdl/2
+
+https://github.com/ytlabs/ng-slim-scroll
+https://cipl_senthilnathan@bitbucket.org/cipl_senthilnathan/vlcoin_frontend.git
+"emailId":"abc@gmail.com"
+"password":"User@123"
+
+../../../public/images
+
+style={{float: 'left'}}
+<div>{ this.state.show && <p> show</p>}</div>
+
+set.setState({ loading: false });
+showElement:true,
+            hideElement:false,
+
+-05-04-2018import {  Grid, Row, Col,  Modal,Checkbox, Form, Input, Message } from 'react-bootstrap';
+
+
+REACT_REFERENCE:
+==========================
+
+
+https://stackoverflow.com/questions/41328091/how-to-send-data-from-one-component-to-another-component-in-react
+
+
+ https://www.codementor.io/kiok46/redux-store-actions-reducers-and-logger-get-started-b35h1pvpc
+

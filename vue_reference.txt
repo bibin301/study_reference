@@ -1,0 +1,346 @@
+<template>
+   <div>
+    <app-sidebar v-bind:sidebarItems= "menuData"
+                 v-bind:listItemClick="listItemClick"
+                 v-bind:defaultIndex="defaultIndex"></app-sidebar>
+      <b-modal ref="statusModal" size="sm" centered hide-footer>
+        <div class="my_title">
+          <p>{{ $t(title) }}</p>
+        </div>
+        <span v-if="successMsg !== ''"><i class="fa fa-tick"></i>{{successMsg}}</span>
+      </b-modal>
+    <b-modal ref="cardSelectionModal"  v-if="cardModal !== undefined && moduleSelected === 'card-management' && !cardSelected.cardUIN" v-model="cardModal.modalShow" size="sm" centered>
+        {{ $t('cardManagement.card_selection') }}
+       <template slot="modal-footer">
+        <b-button class="btn btn-primary btn-xs" @click.stop="closeCardSelectionModal()" style="margin-left:15px; float:right; width: 60px !important;"  variant="primary">
+            <i class="fa fa-check"></i> {{ $t('viewAccountDetails.buttons.ok') }}
+        </b-button>
+      </template>
+    </b-modal>
+    <appCardManagement v-if="moduleSelected === 'card-management'"
+                       v-bind:cardModal="cardModal"
+                       v-bind:closeStatusModal="closeStatusModal"
+                       v-bind:closeCardSelectionModal="closeCardSelectionModal"
+                       v-bind:accountCard="accountCard"
+                       v-bind:enquiryData="enquiryData"
+                       v-bind:cardConfirmModal="cardConfirmModal"
+                       v-bind:submitCardStatus="submitCardStatus"></appCardManagement>
+    <appAccountManagement v-if="moduleSelected === 'account-management'"
+                       v-bind:cardModal="cardModal"
+                       v-bind:profileData="profileData"
+                       v-bind:closeStatusModal="closeStatusModal"
+                       v-bind:currencies="currencies"
+                       v-bind:transactionTypes="transactionTypes"
+                       v-bind:currencyDetails="currencyDetails"
+                       v-bind:closeCardSelectionModal="closeCardSelectionModal"
+                       v-bind:accountCard="accountCard"
+                       v-bind:enquiryData="enquiryData"
+                       v-bind:cardConfirmModal="cardConfirmModal"
+                       v-bind:submitCardStatus="submitCardStatus"></appAccountManagement>
+    <b-row>
+      <b-col lg="2" sm="2" xs="2" class="full_container">
+        <div class="heading">
+          <i class="fa fa-credit-card icon"></i> 
+            {{ $t('viewAccountDetails.accountCard') }}
+        </div>
+        <div class="title">Account ID</div>
+        <div class="value" :class="{ active: active }" @click="changeToAccountId(accountCard)">
+          {{accountCard.accountID}} 
+          <i class="fa fa-flag" :style="{ opacity: changeActiveFlag() }" :class="{ activeFlag: active }" aria-hidden="true"></i>
+        </div>
+        <ul class="account-cards-list">
+          <li class="account-card" v-for="(card, index) in accountCard.cards"  @click="changeActive(card)" :class="{ active: checkActive(card) }" :key="index">
+            <i class="fa fa-credit-card" aria-hidden="true"></i>
+            <span>{{card.pan}}</span> 
+            <span :class="{ notActive: checkActiveStatus(card.cardStatus) }">({{card.cardStatus}})</span> 
+          </li>
+        </ul>
+        </b-col>
+        <appAccountSummary v-bind:summaryData="summaryData"></appAccountSummary>
+        <appCardHolderNotes v-bind:cardNotes="cardNotes"></appCardHolderNotes>
+        </b-row>
+         <b-row class="sub-container">
+          <appCurrencyControl v-bind:currencies="currencies" v-bind:currencyDetails="currencyDetails"></appCurrencyControl>
+          <appStatements v-bind:statementDetails="statementDetails" v-bind:currencies="currencies"></appStatements>
+         </b-row>
+    </div>
+</template>
+<script>
+import { mapGetters, mapActions } from 'vuex'
+import AccountSummary from './AccountSummary'
+import CardHolderNotes from './CardHolderNotes'
+import Sidebar from '../shared/Sidebar'
+import CurrencyControl from './CurrencyControl'
+import Statements from './Statements'
+import CardManagement from '@/components/card-management'
+import AccountManagement from '@/components/account-management'
+import { sidebarViewResults } from '@/constants/menu'
+
+export default {
+  name: 'view-account-details',
+  data () {
+    return {
+      defaultIndex: 1,
+      cardModal: {},
+      successMsg: '',
+      title: '',
+      cardConfirmModal: {},
+      menuData: sidebarViewResults.menuItems,
+      active: true,
+      activeCard: false
+    }
+  },
+  computed: {
+    ...mapGetters({
+      summary: 'viewResults/accountSummary',
+      accountCard: 'viewResults/accountCard',
+      summaryData: 'viewResults/summaryData',
+      transactionTypes: 'viewResults/transactionTypes',
+      profileData: 'viewResults/profileData',
+      enquiryData: 'viewResults/enquiryData',
+      cardSelected: 'viewResults/cardSelected',
+      statementDetails: 'viewResults/statementDetails',
+      cardNotes: 'viewResults/cardNotes',
+      currencies: 'search/currencies',
+      currencyDetails: 'viewResults/currencyDetails'
+    }),
+    moduleSelected () {
+      return this.cardModal.menuItem !== undefined ? this.cardModal.menuItem.module : ''
+    }
+  },
+  components: {
+    appAccountSummary: AccountSummary,
+    appCardManagement: CardManagement,
+    appSidebar: Sidebar,
+    appAccountManagement: AccountManagement,
+    appStatements: Statements,
+    appCurrencyControl: CurrencyControl,
+    appCardHolderNotes: CardHolderNotes
+  },
+  methods: {
+    ...mapActions([]),
+    checkActiveStatus (status) {
+      return status !== 'Active'
+    },
+    closeCardSelectionModal () {
+      this.$refs.cardSelectionModal.hide()
+    },
+    changeActive (card) {
+      this.active = false
+      this.activeCard = card
+      this.$store.dispatch('viewResults/cardSelection', card)
+      this.loadEvent()
+    },
+    listItemClick (item) {
+      if (item.event === 'replace card') this.cardModal = {modalShow: true, modalSize: 'mdm', menuItem: item}
+      else this.cardModal = {modalShow: true, modalSize: 'md', menuItem: item}
+    },
+    submitCardStatus (status, modalItem) {
+      this.cardConfirmModal = {modalShow: true, data: status, modalItem}
+    },
+    checkActive (card) {
+      return card === this.activeCard
+    },
+    changeToAccountId (obj) {
+      this.active = true
+      this.activeCard = false
+      this.$store.dispatch('viewResults/cardSelection', {})
+      this.loadEvent()
+    },
+    closeStatusModal (title, status) {
+      this.title = title
+      this.successMsg = status
+      this.$refs.statusModal.show()
+      this.showMsg()
+    },
+    showMsg () {
+      setTimeout(() => {
+        this.successMsg = ''
+        this.$refs.statusModal.hide()
+      }, 3000)
+    },
+    loadEvent () {
+      this.$store.dispatch('shared/fetchLoadingData', true)
+      setTimeout(() => {
+        this.$store.dispatch('shared/fetchLoadingData', false)
+      }, 1000)
+    },
+    changeActiveFlag () {
+      return this.active ? 1 : 0.3
+    }
+  },
+  created () {
+    this.$store.dispatch('viewResults/fetchAccountSummary')
+    this.$store.dispatch('viewResults/fetchCardHistories')
+    this.$store.dispatch('viewResults/getAccountProfile')
+    this.$store.dispatch('viewResults/fetchTransactionTypes')
+    this.$store.dispatch('viewResults/getStatement')
+    this.$store.dispatch('viewResults/getCurrencyDetails')
+    this.$store.dispatch('viewResults/getCardStatusMapping')
+    this.$store.dispatch('viewResults/getAccountSummary')
+    this.$store.dispatch('viewResults/fetchAccountCards')
+    this.$store.dispatch('search/fetchCurrencies')
+  }
+}
+</script>
+
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style scoped>
+.full_container {
+  display: block;
+  background: #494949 none repeat scroll 0 0;
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  height: 325px;
+  min-width: 20%;
+  float: left;
+  min-height: calc(100vh - 20%);
+  position: relative;
+}
+
+.col-lg-2 {
+  padding-right: 0;
+  padding-left: 0;
+}
+
+.my_title p {
+  text-transform: uppercase;
+  font-size: 18px;
+  border-bottom: 4px solid #46a694;
+  display: inline-block;
+}
+
+.my_title {
+  margin: 40px 0 15px 0;
+  margin-top: 0px;
+}
+
+.account-card {
+  cursor: pointer;
+  padding-left: 13px;
+}
+
+.active {
+  background-color: #49a694;
+}
+
+.activeFlag {
+  color: red;
+}
+
+.account-cards-list {
+  list-style-type: none;
+  color: #ffffff;
+  padding-left: 0;
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+.sub-container {
+  position: relative;
+  padding-left: 10px;
+  margin-top: 10px;
+}
+
+.notActive {
+  color: rgb(239, 72, 54);
+}
+
+.value {
+  color: #ffffff;
+  font-size: 14px;
+  cursor: pointer;
+  overflow: hidden;
+  padding-bottom: 4px;
+  padding-left: 13px;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+  border: none !important;
+}
+
+.row {
+  margin-left: 0;
+}
+
+.title {
+  text-transform: uppercase;
+  font-size: 10px;
+  color: #49a694;
+  padding-left: 15px;
+  padding-top: 15px;
+}
+
+.alert-danger {
+  color: #923838;
+  background-color: #edcfcf;
+  border-color: #ddb6b6;
+}
+
+.heading {
+  text-transform: uppercase;
+  font-size: 14px;
+  line-height: 22px;
+  padding: 9px 0;
+  background: #333333;
+  color: #ffffff;
+  padding-left: 15px;
+  margin-bottom: 5px;
+}
+
+.list {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.list-items {
+  font-size: 10px;
+  color: #49a694;
+  margin-bottom: 12px;
+}
+
+.btn-primary {
+  border-radius: 3px;
+  background-image: linear-gradient(to bottom, #009688 0, #007a6c 100%);
+  background-repeat: repeat-x;
+  border: 0 solid;
+}
+
+.btn:focus {
+  outline: 0;
+  box-shadow: none;
+  background-image: linear-gradient(to bottom, #009688 0, #007a6c 100%);
+}
+
+.btn-primary:not(:disabled):not(.disabled):active {
+  background-image: linear-gradient(to bottom, #009688 0, #007a6c 100%);
+}
+
+.btn-xs {
+  font-size: 12px;
+  padding: 3px 10px;
+}
+
+.help-error {
+  color: #ef4836;
+  font-size: 12px;
+}
+
+.is-danger {
+  border: 1px solid #f00;
+}
+
+.icon {
+  font-size: 18px;
+}
+ "address": [
+      {
+        "firstName": "Joe",
+        "lastName": "Bloggs",
+        "addressLine1": "1 Threadneedle St.",
+        "addressLine2": "",
+        "cityTown": "London",
+        "postCode": "NW1 6XE",
+        "countryCode": "United Kingdom"
+      }
+    ]
+</style>

@@ -1,0 +1,107 @@
+iDetect 
+ Old App: http://192.158.0.107/webapp/main.html#
+ Dev App: http://192.158.0.107:3000
+internal bug 
+ https://trello.com/b/d8DcOBPz/idetect-site
+client BUG
+ http://192.158.0.17/index.cgi
+ 
+ http://192.158.0.107/webapp/main.html# =========>check old server
+ 
+UI Mock
+ http://192.158.0.111/index_dashboard.php
+ 
+ http://192.158.0.111/index_components.php
+ 
+ https://projects.invisionapp.com/share/B3FRR67YHEX#/screens/278405238
+ 
+  public static url: string = 'http://192.168.1.48:8090/ws/api'; //local
+ 
+ ==
+ 
+ NEW
+ ----
+ 
+  http://192.158.0.106/webapp/main.html#
+adminesch/claudiacardinale01 for the flex application
+
+
+ http://192.158.0.17/index.cgi
+ 
+ GIT Credientials
+ ============
+ 
+id : skumar
+pw : skumar080!
+
+new Git Credientials:
+============================
+
+http://192.158.0.24:8888/gitlab/ssubash/iDetectReactUI
+http://192.158.0.24:8888/gitlab/users/sign_in
+UN and PW : bibinraj/bibinraj090!
+
+Your user/password for the VPN is bibinraj/bibinraj090!
+Putty
+=====
+Server IP : 192.158.0.107
+
+user / password : jboss/jboss010!
+
+
+https://devhints.io/moment ---> moment js
+
+ReactUI deployment 107 server :
+===============================
+
+cd ../../opt/iDetectfrontend/iDetectReactUI/
+ps -ef | grep 3000
+kill active process based on result pid
+sudo kill -9 ADDPID
+sudo git pull (user : ssubash/ssubash060!)
+sudo npm install
+sudo nohup npm start &
+
+Putty Access : 
+user / password : jboss/jboss010!
+ 
+
+=========Reference============
+
+
+
+===================
+
+base/app/all/details
+
+
+-scennario name
+
+fieldWorkFlowStatusList
+
+
+=============
+
+admin /reports/constans
+
+adminLogsByCatagory
+
+
+scenario elements rules only show 
+
+
+Requirement
+
+scenario elements - scenario/from
+
+Available Rules -  detection/listof/rules/byperiodicty/0
+
+
+//ip- http://192.168.1.51:8090/ws/api/detection/getrevisions/fromrule
+
+
+user ,periodictyId,ruleName,periodictyObject 
+
+
+getAllSbDetectionRulesStatus =>reload side bar
+ 

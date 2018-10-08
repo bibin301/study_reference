@@ -1,0 +1,30 @@
+Angular 2,4
+
+1.installation
+
+npm install -g @angular/cli
+2.creating
+ng new APP_NAME
+3.Running
+ng serve
+4.Building
+ng build
+5.base href
+ng build --base-href=/my/app/
+6.build for production
+ng build --prod
+7.Reduce the bundle size
+ng build --prod --build-optimizer
+8.Inspect the bundle we use source-map-explorer after production build we can inspect javascript code
+npm install source-map-explorer --save-dev
+9.tsconfig.json
+TypeScript compiler configuration.
+10.Ahead-of-Time (AOT), which compiles your app at build time.
+ng build --aot
+ng serve --aot
+
+
+https://angular.io/guide/ajs-quick-reference
+Unexpected token in angular2-jwt.ts when building with AOT compilation
+https://github.com/auth0/angular2-jwt/issues/198
+

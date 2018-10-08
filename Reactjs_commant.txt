@@ -1,0 +1,80 @@
+mkdir reactApp
+https://github.com/fakiolinho
+https://www.youtube.com/watch?annotation_id=annotation_4139363737&feature=iv&src_vid=MhkGQAoc7bc&v=9kJVYpOqcVU
+https://www.youtube.com/watch?v=MhkGQAoc7bc&list=PLoYCgNOIyGABj2GQSlDRjgvXtqfDxKm5b
+
+https://expressjs.com/en/starter/hello-world.html
+
+=> for validation -use npm validator
+npm init - To initilize the package
+npm install -g babel
+npm install -g babel-cli
+
+npm install webpack --save
+
+npm install webpack-dev-server --save
+
+NOTE:The --save command will add these packages to package.json file.
+
+npm install react --save
+npm install react-dom --save
+npm install babel-core
+npm install babel-loader
+npm install babel-preset-react
+npm install babel-preset-es2015
+
+ create files that we need
+ type nul >index.html
+ type nul >App.jsx
+ type nul >main.js
+ type nul >webpack.config.js
+ 
+ package.json and delete "test" "echo \"Error: no test specified\" && exit 1" inside "scripts" object. We are deleting this line since we will not do any testing in this tutorial. Let's add the start command instead.
+
+"start": "webpack-dev-server --hot"
+
+
+ --hot command will add live reload after something is changed inside our files so we don't need to refresh the browser every time we change our code.
+ 
+ 
+ npm start
+ after change webpack verson -use below commant
+ npm prune
+ 
+ Example for Ternery
+ 
+ 
+   var i = 1;
+      return (
+         <div>
+            <h1>{i == 1 ? 'True!' : 'False'}</h1>
+         </div>
+		 
+		 
+		 
+Session storage:
+=================
+
+To set session - sessionStorage.setItem('userData', JSON.stringify(response.data.loginInfo));
+				 console.log(localStorage.getItem('userData'));
+				 
+				 
+Page Redirection:
+
+			if (localStorage.getItem('userData') == null) {
+            props.history.push('/login');
+        }
+				 
+				 
+				 
+IN Dashboard
+=============
+
+	componentDidMount() {
+		if (localStorage.getItem('userData') != null) {
+			const userSession = JSON.parse(localStorage.getItem('userData'));
+			this.setState({ sessionId: userSession.sessionId });
+			this.setState({ walletAddress: userSession.walletPassword })
+			
+		}
+	}
