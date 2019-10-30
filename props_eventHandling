@@ -1,0 +1,72 @@
+ private viewUser = (currentUserDetails: any) => {
+    getAdminCategoryHistory(currentUserDetails.id, this.props.userId, currentUserDetails['name'], "USER");
+    this.setState({ isEditUser: true, modifyingUser: currentUserDetails, disableUserHistory: false, isDuplicatUser: false, isEditable: true }, () => {
+      this.toggleHasVeil();
+    });
+  }
+
+    <Route exact path="/dashboard/admin/users"
+     render={() => <GridCard adminDataList={adminDataList} svgIcon={SvgIconEnum.PERSONMEDIUM.url} 
+     addButton={formatMessage('admin.addUser')} optionItems={usersOptions} actionItems={usersAction} label='name'
+      description='fullName' onClick={this.addUser} handleSelectedDelete={(selected) => this.deleteSelectedAll(selected, "user")}
+     onDoubleClick={this.viewUser}/>} />
+
+      <GridCardContent
+          adminDataList={adminDataList}
+          gridCardProperties={gridCardProperties}
+          gridIndex={gridIndex}
+          gridCardMenu={gridCardMenu}
+          toggleRisksVisible={toggleRisksVisible}
+          svgIcon={svgIcon}
+          addSelectedItems={this.addSelectedItems}
+          selectedItems={selectedItems}
+          actionItems={actionItems}
+          handleSelectedDelete={handleSelectedDelete}
+          label={label}
+          isRisk={isRisk}
+          description={description}
+          onDoubleClick={onDoubleClick} />
+      </div>
+  const {  onDoubleClick } = this.props;
+
+
+   <div className="c-content__scrollable js-content__scrollable">
+        {_isEmpty(adminDataList) && this.emptyAdminList()}
+        {_map(adminDataList, (item, i) =>
+          <div className="c-row-card js-row-card" key={i} onDoubleClick={() => onDoubleClick(item)}>
+            <div className="c-row-card__toggle-wrapper" onClick={() => addSelectedItems(item.id)}>
+              <CheckBox name={item.name} label=''
+                checked={_includes(selectedItems, item.id)}
+                onChange={_noop} />
+              <div> <svg className="o-icon" width="20" height="19" viewBox="0 0 20 19" xmlns="http://www.w3.org/2000/svg" ><title>Risk</title><use xlinkHref={svgIcon}></use></svg></div>
+            </div>
+            <div className="c-row-card__content">
+              <p className="c-row-card__label">{item[label]}</p>
+              <p className="c-row-card__name">{item[description]}</p>
+            </div>
+            {
+              isRisk && <div className="c-row-card__risk" onDoubleClick={() => {
+                toggleRisksVisible(_assign({}, item.riskLevel), item.id, item.name)
+              }}>
+                <RiskAllocation varients='static' defaultValue={_values(_pick(item.riskLevel, riskLevelAlert))} />
+                <RiskAllocation varients='static' defaultValue={_values(_pick(item.riskLevel, riskLevelFlag))} />
+              </div>
+            }
+            <Popover
+              preferPlace='start'
+              place='below'
+              style={{ left: '30px' }}
+              isOpen={gridCardProperties && gridIndex === i}
+              body={propertiesPopOver(item)}
+              onOuterAction={hidePopOver}
+              key={i}>
+              <AlphaButton className="o-more-btn c-row-card__more-btn" onClick={() => {
+                gridCardMenu(i);
+              }}>
+                <span className="u-visually-hidden">Actions</span>
+              </AlphaButton>
+            </Popover>
+
+          </div>
+        )}
+      </div>
