@@ -1,0 +1,87 @@
+import React from 'react';
+import { map as _map } from 'lodash';
+import { connect } from 'react-redux';
+import { DropDownMenu, MenuItem } from 'material-ui';
+
+
+class refText extends React.Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            selectedRouteIndex: 0,
+        };
+    }
+
+    onSelectedRouteChange = (event, index, value) => {
+        this.setState({
+            selectedRouteIndex: value
+        });
+    }
+
+    renderRouteSelector = (routes = []) => {
+        return (<span>{Locale.get("route")}: <DropDownMenu
+            id="routeTimetableRouteSelector"
+            value={this.state.selectedRouteIndex}
+            onChange={this.onSelectedRouteChange}
+        >
+            {routes.map((route, index) => (
+                <MenuItem key={index} value={index} primaryText={route.routeName} />
+            ))}
+        </DropDownMenu></span>);
+    }
+
+    renderEnergyConsuption = (energyData, selectedScenario) => {
+
+        const header = ['Bus stop name', 'Depot', 'Distance', 'Traction', 'Auxillary', 'Battery Losses', 'HVAC', 'Total'];
+
+        const rows = _map(energyData && energyData.emergencyConsumption, (each) => {
+            const busStops = selectedScenario && selectedScenario.busStops.find(data => data.id === each.busStopId);
+            //depotId
+            const depotName = selectedScenario && selectedScenario.busStops.find(data => data.id === each.depotId);
+            return {
+                busstopName: busStops.name,
+                depot: depotName.name,
+                distance: each.distance.toFixed(2),
+                traction: each.traction.toFixed(2),
+                aux: each.aux.toFixed(2),
+                batteryLosses: each.batteryLosses.toFixed(2),
+                hvac: each.hvac,
+                total: each.total.toFixed(2)
+            }
+
+        })
+
+        return <GenericTable
+            header={header}
+            rows={rows}
+        />;
+    }
+
+    render() {
+
+        const { emergencyConsumptionResult } = this.props.simulationResult;
+        const { selectedRouteIndex } = this.state;
+        const selectedConsumption = emergencyConsumptionResult && emergencyConsumptionResult[selectedRouteIndex];
+        const selectedScenario = this.props.scenario.routes[selectedRouteIndex];
+        console.log("scenario", this.props.scenario)
+
+        return <div>
+            {this.renderRouteSelector(emergencyConsumptionResult)}
+            {this.renderEnergyConsuption(selectedConsumption, selectedScenario)}
+        </div>;
+    }
+}
+
+const mapStateToProps = (state) => ({
+    costs: state.simulation.simulationResult.optimizedDesign.costs,
+    simulationResult: state.simulation.simulationResult,
+    scenario: state.scenario.data
+});
+
+export default connect(mapStateToProps)(refText);
+
+
+
+
+
