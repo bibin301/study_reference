@@ -1,0 +1,303 @@
+action handled:
+xhr.js
+
+
+import $ from 'jquery';
+
+export default class Xhr {
+  static post = (payload, callback) => $.ajax({
+        url: payload.url,
+        xhrFields: {
+            withCredentials: true
+        },
+        type: "POST",
+        contentType: "application/json",
+        data: payload.data,
+        success: payload.success,
+        error: payload.error
+    }).done(response => {
+        if (callback) {
+            callback(response);
+        }
+    });
+}
+
+
+
+2)
+    add() {
+        return `http://${Host}/api`;
+    },
+	
+ 3)	
+	 add = (name, age) => {
+       this.props.loadingSearch();
+        Xhr.post({
+            url: Routes.add(),
+            data: JSON.stringify({name ,age }),
+            success: (response) => do,
+            error: (error) => do
+        })
+    }
+	
+	or
+	
+	
+	export const dup = (id, newName, callback) => {
+    return dispatch => {
+        Xhr.put({
+            url: Routes.r.dup(id, newName),
+            success: callback,
+            error: error => dispatch(fail(error))
+        });
+    };
+};
+
+or
+export const saveAddedScenarioBusBattery = (scenarioBusBattery) => {
+    return () => new Promise((resolve, reject) => {
+        return Xhr.post({
+            url: Routes.insertScenarioBusBattery(),
+            data: JSON.stringify(scenarioBusBattery),
+            success: resolve,
+            error: error => reject(error)
+        });
+    });
+};
+
+ call back
+ const reloadCallback = () => dispatch(action.getAll()); - callback API
+ 
+ duplicate: (id, newName) => dispatch(Actions.duplicate(id, newName, reloadCellsCallback)),
+ 
+ 
+ 
+ Handling Input field:
+ 
+ 
+   1)const auxPower = <FloatField
+            id='auxPower'
+            value={this.props.bus.electrical_specification.hvac.aux_power}
+            onChange={value => this.props.update(BusActions.aux_power, value)}
+          
+        />;
+		
+		
+2)	mapDispatchToProps:
+	
+	 update: (setter, value) => dispatch(BusActions.update(setter, value)),
+	 
+3)
+
+export const UPDATE_BUS_PROPERTY = '@BusActions/UPDATE_BUS_PROPERTY';
+export const update = (setter, value) => {
+    return dispatch => {
+        dispatch(BusEditorActions.setStateSaved(false));
+        dispatch({
+            type: UPDATE_BUS_PROPERTY,
+            setter: setter(value)
+        });
+    };
+};
+
+4) required library
+in reducer
+
+import update from 'react-addons-update';
+
+
+case UPDATE_BUS_PROPERTY:
+            return update(state, action.setter);
+			
+			
+			or
+			
+			
+	1) const accelerationField = <FloatField
+            id='accelerationField'
+            value={this.props.bus.mechanical_specification.dimensions.acceleration}
+            onChange={value => this.props.update(BusActions.acceleration, value)}
+         
+            precision={2}
+        />;
+
+	 
+	2)  update: (setter, value) => dispatch(BusActions.update(setter, value)),
+
+	
+		
+	3) export const acceleration = value => ({ bus: { mechanical_specification: { dimensions: { acceleration: { $set: value } } } } });
+	
+	
+	
+	4)
+	
+	
+find event:
+
+this.props.routes.find(route => whatIf.routeId === route.id);
+
+
+reducer:
+
+    return (dispatch, getState) => {
+        const state = getState(); => to get all redux state
+        const scenario = state.scenario.data;
+       ;
+    };
+	
+	
+Auth:
+
+step 1
+
+import React from "react";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { push } from 'react-router-redux';
+
+const AccessWrapper = (WrappedComponent, neededPermission) => {
+
+    const WithAuthorization = props => {
+        if (props.isInitialized) {
+            if (props.isLoggedIn) {
+                //  if (neededPermission == null || props.userPermissions.indexOf(neededPermission) !== -1)
+                if (neededPermission == null || props.userPermissions) {
+                    return <WrappedComponent {...props} />;
+                } else {
+                    return <span>Permission denied!</span>;
+                }
+            } else {
+                props.goToLogin();
+            }
+        }
+        return null;
+    };
+
+    WithAuthorization.defaultProps = {
+        userPermissions: []
+    };
+
+    WithAuthorization.propTypes = {
+        isLoggedIn: PropTypes.bool.isRequired,
+        isInitialized: PropTypes.bool.isRequired,
+        userPermissions: PropTypes.arrayOf(PropTypes.string),
+        goToLogin: PropTypes.func.isRequired
+    };
+
+    const mapStateToProps = state => ({
+        isLoggedIn: state.main.session.isLoggedIn,
+        isInitialized: state.main.session.isInitialized,
+        userPermissions: state.main.session.permissions
+    });
+
+    const mapDispatchToProps = (dispatch) => ({
+        goToLogin: () => dispatch(push('/myTosa/login'))
+    });
+
+    return connect(mapStateToProps, mapDispatchToProps)(WithAuthorization);
+};
+
+export default AccessWrapper;
+
+
+step 2:
+
+import AccessWrapper from '/AccessWrapper';
+import { PermissionTypes } from Types';
+
+<IndexRoute component={AccessWrapper(ScenarioListContainer, PermissionTypes.MODULENAME)} />
+
+
+export const PermissionTypes = {
+    ADMIN: "ADMIN",
+    DESIGN: "DESIGN",
+   
+};
+
+
+
+import React from "react";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+
+const VisibilityWrapper = props => {
+    // if (props.userPermissions.indexOf(props.neededPermission) !== -1)
+    if (props.userPermissions) {
+        return <div>{props.children}</div>;
+    }
+    return null;
+};
+
+VisibilityWrapper.defaultProps = {
+    userPermissions: []
+};
+
+VisibilityWrapper.propTypes = {
+    neededPermission: PropTypes.string.isRequired,
+    userPermissions: PropTypes.arrayOf(PropTypes.string)
+};
+
+
+import VisibilityWrapper from './VisibilityWrapper';
+
+
+
+ renderButton = (label, permission, icon, onTouch) => {
+        return (
+            <VisibilityWrapper neededPermission={permission} key={label}>
+                <RaisedButton
+                    key={label}
+                    onTouchTap={onTouch}
+                    style={LargeButtonStyle}
+                    label={Locale.get(label)}
+                    labelStyle={labelStyle}
+                    disabled={onTouch === undefined}
+                >
+                    {React.cloneElement(icon, { color: Color, style: IconStyle, viewBox: ViewBoxCoordinates })}
+                </RaisedButton>
+            </VisibilityWrapper>
+        );
+    }
+	
+	Acccess prr
+	
+	this.renderButton("mainScenario", PermissionTypes.ADMIN, <ScenarioIcon />, this.props.onScenarioTap);
+  
+  
+  STUDY
+  
+  https://www.geeksforgeeks.org/javascript-array-sort/
+
+do tex to json conversion
+https://stackoverflow.com/questions/55830414/how-to-read-text-file-in-react
+https://stackoverflow.com/questions/36120265/how-to-convert-text-file-to-json-in-javascript
+
+Stydy:
+Baidu - to study
+
+https://developmentarc.gitbooks.io/react-indepth/content/life_cycle/update/postrender_with_componentdidupdate.html
+
+https://qianggan.wordpress.com/2015/04/29/baidu-maps-javascript-api-document/
+
+
+https://github.com/ivan-94/react-bdmap
+
+datatable:
+https://developers.google.com/chart/interactive/docs/datatables_dataviews#arraytodatatable
+
+To hide API  key in HTML5:
+https://www.programmableweb.com/news/how-to-hide-api-keys-html5-storage-public-code-samples/how-to/2018/01/17
+
+https://kb.yoast.com/kb/remove-google-maps-api-restrictions/ -must
+https://stackoverflow.com/questions/1364858/what-steps-should-i-take-to-protect-my-google-maps-api-key
+
+HH:MM:SS format
+https://stackoverflow.com/questions/55795839/format-user-input-from-textbox-with-javascript-to-hhmmss
+
+
+https://kb.yoast.com/kb/remove-google-maps-api-restrictions/#api-restrictions
+
+
+important Logic
+
