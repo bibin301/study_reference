@@ -1,0 +1,406 @@
+
+TODO
+
+
+
+Course Name	Full Time Employees Path to access the course	Full Time Employees SSD Path for Queries	Contract/ Third party / Recruitment Enablers Path to access the course
+	Contract/ Third party / Recruitment Enablers Employees SSD Path for Queries
+Anti-Bribery and Anti-Corruption Policy (ABAC)
+
+
+Information Security
+
+Code of Business Ethics and Conduct (COBEC)
+
+Export Compliance Workshop
+
+Data Protection Training
+
+
+
+===START REDUX=====
+Redux flow  and Http calls:
+==============================
+
+
+
+
+step 1:
+=======
+
+ 
+ 
+ 
+ import Xhr from '../../util/Xhr'; 
+ 
+ Below method is handling ajax call
+ 
+ Below mentioned code is is common for all REST 
+ 
+ for AJAX used jquery 
+ 
+ 
+ static get = (payload, callback, async = false) => $.ajax({
+        url: payload.url || payload,
+        async: async,
+        xhrFields: {
+            withCredentials: true
+        },
+        error: payload.error
+    }).done(response => {
+        if (callback) {
+            callback(response);
+        }
+    });
+
+ 
+ STEP 2:
+ =======
+ 
+From Component to perform  any action refer below event
+
+const mapDispatchToProps = (dispatch, ownProps) => ({ 
+
+getLastSimulationByScenario: () => dispatch(SimulationActions.getLastSimulationByScenario(parseInt(ownProps.params.id, 10))), // example
+})
+
+
+ import * as SimulationActions from '../../../actions/simulation/SimulationActions';
+
+ we are importing  SimulationActions from above file
+ 
+ 
+STEP 3:
+=======
+ 
+ configured in addressConfig.js
+ 
+ Used for PORT intililization
+ 
+ var addressConfig = {
+    //frontendAddress: '10.41.78.73',
+    frontendAddress: 'localhost',
+    frontendPort: '8000',
+    webpackPort: '9090',
+    //backendAddress: '10.41.78.73',
+    backendAddress: '10.41.74.250',
+    //backendAddress: 'localhost',
+    //backendPort: '9000'
+};
+
+module.exports = addressConfig;
+
+
+Route.js
+ 
+var addressConfig = require('../../address.config');
+const Host = `${addressConfig.backendAddress}:${addressConfig.backendPort}`;
+
+used for  API PATH intililization
+ 
+ 
+ const Simulation = {
+
+    getLastSimulationByScenario(scenarioId) {
+        return `http://${Host}/simulation/results/${encodeURIComponent(scenarioId)}`;
+    },
+  
+};
+
+encodeURIComponent() - sceurity reason added 
+
+
+STEP 4:
+======
+
+ SimulationAction.js 
+ 
+ dispating event will reach action.js (Refer step 2)
+ 
+ import Routes from '../../constants/Route';
+ From above path importing the API URL
+ 
+ 
+ export const getLastSimulationByScenario = (scenarioId) => {
+    return dispatch => {
+        return new Promise((resolve, reject) => {
+            Xhr.get({
+                url: Routes.Simulation.getLastSimulationByScenario(scenarioId),
+                error: error => {
+                    reject(error);
+                    dispatch(getLastSimulationByScenario_failure(error));
+                }
+            }, (data) => {
+                dispatch(getLastSimulationByScenario_Success(data));
+                resolve(data);
+            });
+        });
+    };
+};
+
+error dispatch:
+
+export const ROUTES_SIMULATION_GETLASTSIMULATIONBYSCENARIO_ERROR = '@SimulationActions/ROUTES_SIMULATION_GETLASTSIMULATIONBYSCENARIO_ERROR'; // action type
+const getLastSimulationByScenario_failure = error => ({
+    type: ROUTES_SIMULATION_GETLASTSIMULATIONBYSCENARIO_ERROR,
+    error
+});
+
+success dispatch:
+
+export const GET_LAST_SIMULATION_BY_SCENARIO_SUCCESS = '@SimulationActions/GET_LAST_SIMULATION_BY_SCENARIO_SUCCESS'; // action type
+export const getLastSimulationByScenario_Success = (data) => ({
+    type: GET_LAST_SIMULATION_BY_SCENARIO_SUCCESS,
+    result: data
+});
+
+STEP 5:
+======
+simulationReducer.js
+
+
+this file will handle the redux state
+
+
+const defaultState = {
+    optimizationResult: {},
+  
+};
+
+
+
+const simulation = (state = defaultState, action) => {
+    switch (action.type) {
+       
+        case SimulationActions.GET_LAST_SIMULATION_BY_SCENARIO_SUCCESS: {
+            return update(state, { simulationResult: { $set: action.result } });
+        }
+              
+        default: return state;
+    }
+};
+export default simulation;
+
+
+
+STEP 6:
+=========
+To get back redux's state information to component use below function
+
+const mapStateToProps = (state) => ({
+    simulationResult: state.simulation.simulationResult, //  example
+    
+});
+
+
+
+=================END REDUX=====
+
+Login component:
+
+
+LoginContainer.jsx - handling the session information
+
+
+/home/bibin/Documents/mytosa/code/interface/frontend/src/components/Engineering/EngineeringList/_EngineeringList.scss
+
+
+/home/bibin/Documents/mytosa/code/mytosa-interface/frontend/src/components/Simulation/SimulationEditor/Tab/OptimizationTab.jsx - simulation tab
+
+
+	
+	
+reset Info:
+===========
+import Loading from '../components/Common/Loader/Loader'
+ isGifSearching: state.loaderReducer.isGifSearching
+ const { isGifSearching } = this.props;
+ 
+ {isGifSearching && <Loading />}
+loadingGifSearch
+stopGifSearching
+
+
+action:
+export const call = () => dispatch => {
+  dispatch({
+    type: 'call'
+  })
+}
+
+reducer
+
+  case 'call': 
+            return {
+                ...state,
+                bookingConfirm: null
+            }
+			
+className ={condition ? 'a':'b'}
+
+custom_btn1
+
+
+
+=========to handle redux level ===
+  {WeekDays.map((row, index) => (
+                    <Checkbox
+                        label={Locale.get(row)}
+                        key={index}
+                        checked={this.props.weekDays.indexOf(index) !== -1}
+                        onCheck={(event, value) => this.toggleDay(index, value)}
+                    />
+                ))}
+
+
+
+======
+
+
+ isOpen: false
+ this.state.isOpen == true && swal(Locale.get("simulationFineshedAlert"));
+ 
+ 
+ reset handling
+ 
+ 
+ action
+ export const bookingReset = () => dispatch => {
+  dispatch({
+    type: 'bookingReset'
+  })
+}
+
+simulationSucess
+reducer
+
+const InitialState = {
+   paymentDetails:null,
+   bookingConfirm: null
+}
+
+  case 'bookingReset': 
+            return {
+                ...state,
+                bookingConfirm: null
+            }
+			
+			
+	bookingConfirm: 'failure'
+	
+	
+	incomponent level
+	
+	
+	 if (bookingConfirm === 'success') {
+      this.props.history.push("/bookingconfirmation");
+    }
+    if(bookingConfirm === 'failure') {
+      this.setState({ isModal: true })
+    }
+	
+	
+	 this.props.bookingReset();
+	 
+	 
+	 
+	 checkbox:
+	 
+	 =====
+	 component a 
+	 
+	 this.state = {
+          
+            weekDays: [0, 1, 2, 3, 4, 5, 6]
+        };
+		
+		
+		this.state.weekDays.filter(weekday => timeFrame.weekDays.indexOf(weekday) !== -1).length > 0) {
+                overlappingWith.push(timeFrame.name);
+            }
+			
+			
+			
+			pass->components
+			
+			 weekDays={this.state.weekDays}
+			 
+			 
+			 component b
+			 
+			 next  component:
+			 
+			 const WeekDays = ["dayMonday", "dayTuesday", "dayWednesday", "dayThursday", "dayFriday", "daySaturday", "daySunday"];
+			 
+			 
+			 alldays checked 
+			 
+			 	  allWeekDaysChecked = () => {
+                              return this.props.weekDays.reduce((prev, current) => prev + current + 1, 0) === 28; //sum from 1 to 7
+		
+
+                   }
+				   
+				   
+				    toggleDay = (weekDayNumber, value) => {
+        let result = this.props.weekDays;
+        console.log("result" ,this.props.weekDays)
+        if (value) {
+            result.push(weekDayNumber);
+            result.sort((a, b) => a > b);
+        } else {
+            result.splice(result.indexOf(weekDayNumber), 1);
+        }
+        this.props.onChange('weekDays', result);
+    }
+	 
+			 
+			  <Checkbox label={Locale.get("dayAll")} checked={this.allWeekDaysChecked()} onCheck={this.handleAllDaysCheck} />
+			  
+			   {WeekDays.map((row, index) => (
+                    <Checkbox
+                        label={Locale.get(row)}
+                        key={index}
+                        checked={this.props.weekDays.indexOf(index) !== -1}
+                        onCheck={(event, value) => this.toggleDay(index, value)}
+                    />
+                ))}
+			  
+			  style={{ height: this.props.showElevationProfile ? '150px' : '0px', visibility: this.props.showElevationProfile ? 'visible' : 'hidden' }}
+			  
+	create new object while showing dropdown:
+	      ==
+		  
+		    const listOfBuses = buses.map(bus => new Bus(bus))
+			
+			this.props.buses.map(bus =>
+            <MenuItem key={bus.getId()} value={bus.getId()} primaryText={bus.getName()} />
+        );
+		
+		
+	===based on filter object remove==
+	
+	  var data =  
+ [
+    {
+      "module": "Warning Message",
+      "message": "  "
+    },
+    {
+      "module": "Optimization ",
+      "message": "  The solution provided is optimal according to the termination criteria provided by the platform (optimality gap). "
+    },
+    {
+      "module": "Battery Aging ",
+      "message": " Simulation successful reached EOL"
+    }
+  ]
+
+var gg =  data.filter(function(ss) { return ss.module != "Warning Message" } )
+console.log(gg)
+	
+	
+	Addition of more info on error messages - warring messages dynamically implemented
+	
+		
+	 
