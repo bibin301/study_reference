@@ -82,6 +82,24 @@ const mapStateToProps = (state) => ({
 export default connect(mapStateToProps)(refText);
 
 
-
+data format:
+[
+  {
+    "routeId": 56,
+    "routeName": "SanFrancisco41Depot",
+    "emergencyConsumption": [
+      {
+        "busStopId": 2502,
+        "depotId": 2544,
+        "traction": 3.396947229937569,
+        "aux": 1.694120833332135,
+        "hvac": 0,
+        "batteryLosses": 0.19060322545889521,
+        "total": 5.2816712887285995,
+        "distance": 4982.659788501028
+      }
+    ]
+  }
+]
 
 
