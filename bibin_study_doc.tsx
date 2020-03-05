@@ -1,3 +1,7 @@
+to check all check boxes
+=====
+	https://jsfiddle.net/52uny55w/
+
 =========props handling====
 import PropTypes from 'prop-types';
    static propTypes = {
