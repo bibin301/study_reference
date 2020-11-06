@@ -1,0 +1,39 @@
+Response: 
+[
+  {
+    "id": 496614,
+    "ownerId": 1,
+    "is_default_card": 1,
+    "is_card_expired": 0
+  },
+  {
+    "id": 496615,
+    "ownerId": 1,
+    "is_default_card": 0,
+    "is_card_expired": 1
+  }
+]
+
+Code: 
+Html:
+<input
+  key="each"
+  checked={selected === each.id}
+  className={cx(manageCard.className, "mc-radio")}
+  onChange={(ev) => 
+      {setSelected(+ev.target.value)}
+  }
+  onClick={()=>getDefault(each)}
+  type="radio"
+  value={each.id}
+  />
+
+Js:
+function getDefault(each){ } 
+const storedCardsListInfo = storedCardsList && storedCardsList.cardDetails; - from reducer
+const defaultCard = storedCardsListInfo && storedCardsListInfo.find(each=>each.is_default_card)
+ const [selected, setSelected] = useState(defaultCard? defaultCard.id : (storedCardsListInfo.length?storedCardsListInfo[0].id :null));
+ React.useEffect(()=>{setSelected(defaultCard.id)},[defaultCard])
+ 
+ ===
+ 
